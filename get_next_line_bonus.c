@@ -6,7 +6,7 @@
 /*   By: nel-khad <nel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 09:21:55 by nel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 13:57:23 by nel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 16:05:51 by nel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*read_line(char **tmp, char *buf, int fd)
 		n = ft_strchr(*tmp);
 	}
 	free(buf);
-	if (n != -1)
+	if (n != -1 && c > 0)
 	{
 		next_line = get_line(tmp, n);
 		return (next_line);
@@ -67,11 +67,11 @@ char	*get_next_line(int fd)
 	char		*buf;
 	int			n;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1024)
 		return (NULL);
 	if (!tmp[fd])
 		tmp[fd] = ft_strdup("");
-	buf = malloc(BUFFER_SIZE + 1);
+	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
 	n = ft_strchr(tmp[fd]);
@@ -89,20 +89,20 @@ char	*get_next_line(int fd)
 	return (NULL);
 }
 
-// int	main(void)
-// {
-// 	int fd1 = open("test.txt", O_CREAT | O_RDONLY);
-// 	int fd2 = open("test2.txt", O_CREAT | O_RDONLY);
-// 	char *line = get_next_line(fd1);
-// 	printf("line 11:%s", line);
-// 	free(line);
-// 	line = get_next_line(fd2);
-// 	printf("line 22:%s\n", line);
-// 	free(line);
-// 	line = get_next_line(fd1);
-// 	printf("line 21:%s\n", line);
-// 	free(line);
-// 	line = get_next_line(fd2);
-// 	printf("line 22:%s\n", line);
-// 	free(line);
-// }
+int	main(void)
+{
+	int fd1 = open("test.txt", O_RDONLY);
+	int fd2 = open("test2.txt", O_RDONLY);
+	char *line = get_next_line(fd1);
+	printf("line 11:%s", line);
+	free(line);
+	line = get_next_line(fd2);
+	printf("line 22:%s\n", line);
+	free(line);
+	line = get_next_line(fd1);
+	printf("line 21:%s\n", line);
+	free(line);
+	line = get_next_line(fd2);
+	printf("line 22:%s\n", line);
+	free(line);
+}

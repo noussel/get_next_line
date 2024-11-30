@@ -6,7 +6,7 @@
 /*   By: nel-khad <nel-khad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 09:21:55 by nel-khad          #+#    #+#             */
-/*   Updated: 2024/11/28 13:57:12 by nel-khad         ###   ########.fr       */
+/*   Updated: 2024/11/30 16:04:40 by nel-khad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,14 @@ char	*read_line(char **tmp, char *buf, int fd)
 	while (c > 0 && n == -1)
 	{
 		c = read(fd, buf, BUFFER_SIZE);
+		if (c < 0)
+			break ;
 		buf[c] = '\0';
 		*tmp = ft_strjoin(*tmp, buf);
 		n = ft_strchr(*tmp);
 	}
 	free(buf);
-	if (n != -1)
+	if (n != -1 && c > 0)
 	{
 		next_line = get_line(tmp, n);
 		return (next_line);
@@ -67,11 +69,11 @@ char	*get_next_line(int fd)
 	char		*buf;
 	int			n;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!tmp)
 		tmp = ft_strdup("");
-	buf = malloc(BUFFER_SIZE + 1);
+	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
 	n = ft_strchr(tmp);
@@ -89,15 +91,15 @@ char	*get_next_line(int fd)
 	return (NULL);
 }
 
-// int main()
-// {
-// 	int fd = open("test.txt", O_RDONLY);
-// 	int i = 1;
-// 	char *line;
-// 	while ((line = get_next_line(fd)) != NULL )
-// 	{
-// 		printf("line %d : %s", i, line);
-// 		free(line);
-// 		i++;
-// 	}
-// }
+int	main(void)
+{
+	int fd = open("test.txt", O_RDONLY);
+	int i = 1;
+	char *line;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("line %d : %s", i, line);
+		free(line);
+		i++;
+	}
+}
